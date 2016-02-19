@@ -1,5 +1,14 @@
 class ArticlesController < ApplicationController
   include ArticlesHelper
+  
+  before_filter :zero_authors_or_authenticated, except: [:index, :show]
+  def zero_authors_or_authenticated
+    unless Author.count == 0 || current_user
+      redirect_to root_path
+      return false
+    end
+  end
+  
   def index
     @articles = Article.all
   end
